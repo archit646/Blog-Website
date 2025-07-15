@@ -9,7 +9,7 @@ class Category(models.Model):
 class Post(models.Model):
     title=models.CharField(max_length=100)
     content=models.CharField(max_length=500)
-    created_at=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateField(auto_now_add=True)
     views=models.IntegerField(default=0)
     author=models.ForeignKey(User,on_delete=models.CASCADE)
     category=models.ForeignKey(Category,on_delete=models.CASCADE)

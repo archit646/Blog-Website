@@ -14,8 +14,8 @@
     {% endblock %}
 </head>
 
-<body class="flex flex-col min-h-screen">
-    <nav class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 shadow-lg">
+<body class="flex flex-col min-h-screen bg-gray-500">
+    <nav class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 shadow-lg fixed w-full z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <!-- Logo -->
@@ -61,40 +61,77 @@
         </div>
     </nav>
     {% block content %}
-    <div class="main flex-grow grid grid-cols-12">
-        <div class="trending-outer col-span-full border h-auto relative flex flex-col justify-center">
-            <h1 class="text-center font-bold text-3xl p-6">Trending Posts</h1>
+    <div class="main flex-grow grid grid-cols-12 gap-6 p-4 mt-10">
+        <div class="trending-container col-span-full h-auto w-full relative flex flex-col justify-center">
+            <h1 class="text-center font-bold text-3xl p-6 text-white">Trending Posts</h1>
             <div
-                class="slider w-[1200px] m-auto flex overflow-x-scroll scrollbar-hide gap-5 p-4 border-2 border-blue-700 justify-center items-center">
-                {% for post in posts %}
-                <div class="card flex flex-col min-w-[275px] border shadow-lg shadow-black">
-                    <img src="https://www.salesforce.com/ca/blog/wp-content/uploads/sites/12/2023/10/anatomy-of-a-blog-post-deconstructed-open-graph.jpg"
-                        class="">
-                    <div class="card-content text-center p-3">
-                        <h1>Title</h1>
-                        <div class="flex justify-around">
-                            <span>Author</span>
-                            <span>Date</span>
+                class="slider w-[79%] m-auto flex overflow-x-scroll scrollbar-hide gap-5 p-4 justify-center items-center">
+                {% for post in trending %}
+                <div
+                    class="card flex flex-col min-w-[275px] max-w-[275px] h-[300px] p-2 shadow-lg shadow-black bg-white">
+                    <img src="{{post.thumbnail.url}}" class="object-cover h-[60%]">
+                    <div class="card-content p-3">
+                        <h1 class="text-2xl font-bold break-words line-clamp-2">{{post.title}}</h1>
+                        <div class="flex justify-around p-2">
+                            <span>{{post.author}}</span>
+                            <span>{{post.created_at}}</span>
                         </div>
 
                     </div>
                 </div>
                 {% endfor %}
                 <button
-                    class="prev_btn absolute size-[50px] left-0 border rounded-full my-auto translate-x-[135px] backdrop-blur-sm bg-white/30"
+                    class="prev_btn absolute size-[50px] left-0  rounded-full my-auto translate-x-[55px] md:translate-x-[130px] backdrop-blur-sm bg-white/30"
                     onclick="prev()">Prev</button>
                 <button
-                    class="next_btn absolute size-[50px] right-0 border rounded-full translate-x-[-135px] backdrop-blur-sm bg-white/30"
+                    class="next_btn absolute size-[50px] right-0  rounded-full translate-x-[-55px] md:translate-x-[-130px] backdrop-blur-sm bg-white/30"
                     onclick="next()">Next</button>
-
             </div>
+        </div>
+        <div class="recent-container col-span-2 flex flex-col gap-3 p-2 bg-white">
+            <h1 class="text-center text-2xl font-bold p-2">Recent Posts</h1>
+            {% for post in recent %}
+            <div class="post flex gap-2 p-2 items-center border-t-[1px]">
+                <img src="{{post.thumbnail.url}}"
+                    class="w-[60px] h-[60px] overflow-auto object-center object-cover flex-shrink-0" alt="">
+                <h1 class="line-clamp-2 font-bold break-words">{{post.title}}</h1>
+            </div>
+            {% endfor %}
 
         </div>
+        <div class="all-container col-span-10 p-4 flex flex-col gap-4 bg-white">
+            <h1 class="text-center text-2xl font-bold ">All Posts</h1>
+            <div class="category flex justify-center p-3 gap-3 bg-blue-600 w-[98%] mx-auto">
+                <a href="/" class="font-thin text-white text-xl bg-yellow-500 py-1 px-4 rounded-xl">All</a>
+                {% for category in categories %}
+                <a href="?category={{category.name|urlencode}}" class="font-thin text-white text-xl bg-yellow-500 py-1 px-2 rounded-xl">{{category.name}}</a>
+                {% endfor %}
+                
 
+            </div>
+            <div class="grid grid-cols-4 place-items-center gap-4">
+
+                {% for post in posts %}
+                <div
+                    class="card flex flex-col min-w-[275px] max-w-[275px] h-[300px] p-2 shadow-lg shadow-black ">
+                    <img src="{{post.thumbnail.url}}" class="object-cover h-[60%]">
+                    <div class="card-content p-3">
+                        <h1 class="text-2xl font-bold break-words line-clamp-2">{{post.title}}</h1>
+                        <div class="flex justify-around p-2">
+                            <span>{{post.author}}</span>
+                            <span>{{post.created_at}}</span>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+
     {% endblock %}
 
-    <footer class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-gray-300 py-10 mt-10">
+    <footer class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-gray-300 py-10 w-full">
         <div
             class="container mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row justify-between items-center md:items-start space-y-8 md:space-y-0">
 
@@ -147,16 +184,6 @@
             &copy; 2024 BrandName. All rights reserved.
         </div>
     </footer>
-
-    <script>
-        const toggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        toggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-    </script>
     <script src="{% static '/js/home.js' %}"></script>
 </body>
 
