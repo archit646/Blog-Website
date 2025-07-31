@@ -25,18 +25,24 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-6 text-white font-medium">
-                    <a href="#" class="hover:text-yellow-300 transition">Home</a>
+                    <a href="{% url 'home' %}" class="hover:text-yellow-300 transition">Home</a>
                     <a href="#" class="hover:text-yellow-300 transition">About</a>
                     <a href="#" class="hover:text-yellow-300 transition">Services</a>
                     <a href="#" class="hover:text-yellow-300 transition">Contact</a>
                 </div>
 
                 <!-- Desktop Button -->
-                <div class="hidden md:block">
-                    <a href="#"
+                <div class="hidden md:flex border gap-8">
+                    <a href="{% url 'createpost' %}"
                         class="bg-white text-indigo-700 px-4 py-2 rounded-xl hover:bg-yellow-300 transition-all font-semibold">
-                        Get Started
+                        Create Post
                     </a>
+                    <div class="flex gap-3 max-w-sm border">
+                        <a href="#"
+                            class="py-2.5 px-6 rounded-lg text-sm font-medium bg-teal-200 text-teal-800">Login</a>
+                        <a href="{% url 'signup' %}"
+                            class="py-2.5 px-6 rounded-lg text-sm font-medium text-white bg-teal-600">SignUp</a>
+                    </div>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -50,18 +56,23 @@
 
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="md:hidden hidden px-4 pb-4 space-y-2 text-white font-medium">
-            <a href="#" class="block hover:text-yellow-300 transition">Home</a>
+            <a href="{% url 'home' %}" class="block hover:text-yellow-300 transition">Home</a>
             <a href="#" class="block hover:text-yellow-300 transition">About</a>
             <a href="#" class="block hover:text-yellow-300 transition">Services</a>
             <a href="#" class="block hover:text-yellow-300 transition">Contact</a>
-            <a href="#"
+            <a href="{% url 'createpost' %}"
                 class="block bg-white text-indigo-700 text-center px-4 py-2 rounded-xl hover:bg-yellow-300 transition-all font-semibold mt-2">
-                Get Started
+                Create Post
             </a>
+            <div class="flex gap-3 max-w-sm">
+                <button class="py-2.5 px-6 rounded-lg text-sm font-medium bg-teal-200 text-teal-800">Cancel</button>
+                <button class="py-2.5 px-6 rounded-lg text-sm font-medium text-white bg-teal-600">Confirm</button>
+            </div>
         </div>
     </nav>
-    {% block content %}
     <div class="main flex-grow grid grid-cols-12 gap-6 p-4 mt-10">
+        {% block content %}
+
         <div class="trending-container col-span-full h-auto w-full relative flex flex-col justify-center">
             <h1 class="text-center font-bold text-3xl p-6 text-white">Trending Posts</h1>
             <div
@@ -71,7 +82,8 @@
                     class="card flex flex-col min-w-[275px] max-w-[275px] h-[300px] p-2 shadow-lg shadow-black bg-white">
                     <img src="{{post.thumbnail.url}}" class="object-cover h-[60%]">
                     <div class="card-content p-3">
-                        <h1 class="text-2xl font-bold break-words line-clamp-2">{{post.title}}</h1>
+                        <h1 class="text-2xl font-bold break-words line-clamp-2 hover:text-blue-600"><a
+                                href="{% url 'detail' pk=post.id %}">{{post.title}}</a></h1>
                         <div class="flex justify-around p-2">
                             <span>{{post.author}}</span>
                             <span>{{post.created_at}}</span>
@@ -94,29 +106,32 @@
             <div class="post flex gap-2 p-2 items-center border-t-[1px]">
                 <img src="{{post.thumbnail.url}}"
                     class="w-[60px] h-[60px] overflow-auto object-center object-cover flex-shrink-0" alt="">
-                <h1 class="line-clamp-2 font-bold break-words">{{post.title}}</h1>
+                <h1 class="line-clamp-2 font-bold break-words hover:text-blue-600"><a
+                        href="{% url 'detail' pk=post.id %}">{{post.title}}</a></h1>
             </div>
             {% endfor %}
 
         </div>
         <div class="all-container col-span-10 p-4 flex flex-col gap-4 bg-white">
             <h1 class="text-center text-2xl font-bold ">All Posts</h1>
+
             <div class="category flex justify-center p-3 gap-3 bg-blue-600 w-[98%] mx-auto">
                 <a href="/" class="font-thin text-white text-xl bg-yellow-500 py-1 px-4 rounded-xl">All</a>
                 {% for category in categories %}
-                <a href="?category={{category.name|urlencode}}" class="font-thin text-white text-xl bg-yellow-500 py-1 px-2 rounded-xl">{{category.name}}</a>
+                <a href="?category={{category.name|urlencode}}"
+                    class="font-thin text-white text-xl bg-yellow-500 py-1 px-2 rounded-xl">{{category.name}}</a>
                 {% endfor %}
-                
+
 
             </div>
             <div class="grid grid-cols-4 place-items-center gap-4">
 
                 {% for post in posts %}
-                <div
-                    class="card flex flex-col min-w-[275px] max-w-[275px] h-[300px] p-2 shadow-lg shadow-black ">
+                <div class="card flex flex-col min-w-[275px] max-w-[275px] h-[300px] p-2 shadow-lg shadow-black ">
                     <img src="{{post.thumbnail.url}}" class="object-cover h-[60%]">
                     <div class="card-content p-3">
-                        <h1 class="text-2xl font-bold break-words line-clamp-2">{{post.title}}</h1>
+                        <h1 class="text-2xl font-bold break-words line-clamp-2 hover:text-blue-600"><a
+                                href="{% url 'detail' pk=post.id %}">{{post.title}}</a></h1>
                         <div class="flex justify-around p-2">
                             <span>{{post.author}}</span>
                             <span>{{post.created_at}}</span>
@@ -127,9 +142,10 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
 
-    {% endblock %}
+
+        {% endblock %}
+    </div>
 
     <footer class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-gray-300 py-10 w-full">
         <div
